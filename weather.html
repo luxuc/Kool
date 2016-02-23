@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--import Boostrap CSS -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <!--my costum CSS -->
+  <link rel="stylesheet" href="mystyle.css">
+  <!-- import font from google fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+</head>
+<body>
+<div id="black" class="container">
+  <h1 class="col-xs-12 text-center">Weather in <small id="City"></small></h1>
+  <div class="col-xs-12 text-center" id="major"></div>
+  <div class="col-xs-12 text-center"><h4 id="time"></h4></div>
+  <div class="col-xs-12 text-center"><div id="uv"></div></div>
+  <div class="col-xs-12 text-center"><h4 id="sun_time"></h4></div>
+  <div class="row" id="break">
+    <div class="col-xs-6 col-xs-offset-3">
+      <ul class="list-group" id="min_max">
+      </ul>
+      <ul class="list-group" id="forecast">
+      </ul>
+    </div>
+  </div>
+  <div class="col-xs-4 text-center" id="url"></div>
+</div>
+
+<!-- import jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<!-- import jquery UI -->
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+var oP = document.getElementById("weather");
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(getWeatherInfo);
+    } else {
+        oP.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+
+function getDayName(dayNum){
+  if (dayNum % 7 == 0) {
+    return "Sunday";
+  } else if (dayNum % 7 == 1) {
+    return "Monday";
+  } else if (dayNum % 7 == 2) {
+    return "Tuesday";
+  } else if (dayNum % 7 == 3) {
+    return "Wednesday";
+  } else if (dayNum % 7 == 4) {
+    return "Thursday";
+  } else if (dayNum % 7 == 5) {
+    return "Friday";
+  } else if (dayNum % 7 == 6) {
+    return "Saturday";
+  } else {
+    return "unknown error";
+  }
+}
+
+function getWeatherInfo(position) {
+    var forecastURL = "http://api.openweathermap.org/data/2.5/forecast/daily?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&cnt=10&mode=json&APPID=44db6a862fba0b067b1930da0d769e98";
+    var currentURL = "http://api.openweathermap.org/data/2.5/weather?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&APPID=44db6a862fba0b067b1930da0d769e98";
+    var uvIndexURL = "http://api.owm.io/air/1.0/uvi/current?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&appid=44db6a862fba0b067b1930da0d769e98"
+    //get current wather info
+    $.ajax({
+      type: "GET",
+      url: currentURL,
+      dataType: "json",
+      success:function(responseData, status) {
+        //$("#url").html(currentURL);
+        //store ifo about city and country
+        var cityInfo = responseData.name +", " + responseData.sys.country;
+        $("#City").html(cityInfo);
+        //store info about temperature
+        var temp = "<h1>" + Math.round(responseData.main.temp-273.15)
+        + "\u00b0C<img src='http://openweathermap.org/img/w/" + responseData.weather[0].icon + ".png' /></h1>";
+        var situation = responseData.weather;
+        //store info about major weather
+        var weath = "";
+        $.each(situation, function(key,val){
+          weath += "<h1>" + val.main + " <small>" + val.description + "</small></h1>";
+        });
+        var weatherInfo = temp + weath;
+        $("#major").html(weatherInfo);
+        //store today's max and min temp
+        var minTemp = Math.round(responseData.main.temp_min - 273.15);
+        var maxTemp = Math.round(responseData.main.temp_max - 273.15);
+        var d = new Date();
+        var dayNum = d.getDay();
+        var myday = getDayName(dayNum);
+        $("#min_max").html("<li class='list-group-item'>" + myday + " TODAY <span class='temp-info'>"
+        + minTemp + "|" + maxTemp + "</span></li>");
+        //store sunrise and sunset time
+        var sunsetTime = responseData.sys.sunset;
+        var sunriseTime = responseData.sys.sunrise;
+        $("#sun_time").html("Sunrise at " + convertTimestamp(sunriseTime)
+        + " <span class='glyphicon glyphicon-time'></span> Sunset at " + convertTimestamp(sunsetTime));
+      }
+    });
+    //get UV index
+    $.ajax({
+      type: "GET",
+      url: uvIndexURL,
+      dataType: "json",
+      success:function(responseData, status) {
+        var UV_Index = responseData.value;
+        var UV_color = "";
+        var UV_desc = "";
+        if (UV_Index < 3) {
+          UV_color = "#1B998B";
+          var UV_desc = "low";
+        } else if (UV_Index < 6) {
+          UV_color = "FFFD82";
+          var UV_desc = "moderate";
+        } else if (UV_Index < 8) {
+          UV_color = "FF9B71";
+          var UV_desc = "high";
+        } else if (UV_Index < 11) {
+          UV_color = "E84855";
+          var UV_desc = "very high";
+        } else {
+          UV_color ="2D3047";
+          var UV_desc = "extreme";
+        }
+        var UV_html = "<h4> UV index: " + UV_Index + " " + UV_desc + "</h4>";
+        $("#uv").html(UV_html);
+        $("#uv").css("background-color",UV_color);
+      }
+    });
+    //get forecast info
+
+    $.ajax({
+      type: "GET",
+      url: forecastURL,
+      dataType: "json",
+      success:function(responseData,status) {
+        var d = new Date();
+        var dayNum = d.getDay() + 1;
+        var forecastInfo = "";
+        var dataCluster= responseData.list;
+        $.each(dataCluster, function(key, val) {
+          var currentDay = getDayName(dayNum);
+          forecastInfo += "<li class='list-group-item'>" + currentDay + ": " +val.weather[0].main
+          + "<img class='be-center' src='http://openweathermap.org/img/w/" + val.weather[0].icon
+          + ".png' />" + "<span class='temp-info'>" + Math.round(val.temp.min - 273.15)
+          + "|" + Math.round(val.temp.max - 273.15) + "</span></li>";
+          dayNum++;
+        });
+        $("#forecast").html(forecastInfo);
+      }
+    });
+
+}
+
+function displayTime() {
+  var d = new Date();
+  var year = d.getFullYear();
+  var month = d.getMonth();
+  var date = d.getDate();
+  var hours = d.getHours();
+  var minutes = d.getMinutes();
+  $("#time").html("Weather info get at "+ year+ "." + (month+1) + "." + date + " " + hours + ":" + minutes);
+}
+
+function convertTimestamp(timestamp) {
+  var d = new Date(timestamp * 1000),	// Convert the passed timestamp to milliseconds
+		yyyy = d.getFullYear(),
+		mm = ('0' + (d.getMonth() + 1)).slice(-2),	// Months are zero based. Add leading 0.
+		dd = ('0' + d.getDate()).slice(-2),			// Add leading 0.
+		hh = d.getHours(),
+		h = hh,
+		min = ('0' + d.getMinutes()).slice(-2),		// Add leading 0.
+		ampm = 'AM',
+		time;
+
+	if (hh > 12) {
+		h = hh - 12;
+		ampm = 'PM';
+	} else if (hh === 12) {
+		h = 12;
+		ampm = 'PM';
+	} else if (hh == 0) {
+		h = 12;
+	}
+	// ie: 2013-02-18, 8:35 AM
+	time = yyyy + '-' + mm + '-' + dd + ', ' + h + ':' + min + ' ' + ampm;
+
+	return time;
+}
+
+//main scripts starts from here
+$(function(){
+  displayTime();
+  getLocation();
+  $(".container").delay(600).show( "clip", 400 );
+});
+
+</script>
+
+</body>
+</html>

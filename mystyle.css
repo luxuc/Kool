@@ -1,0 +1,40 @@
+.container {
+  display: none;
+  color: white;
+  font-family: 'Open Sans', sans-serif;
+  position: absolute;
+  height: 100%;
+  width:100%;
+}
+body {
+  background-color: black;
+}
+#black {
+  background-color: black;
+}
+#uv {
+  width:20%;
+  margin: auto;
+}
+#today {
+  border-top: solid white;
+  border-top-width: 1px;
+}
+#min_max {
+  border-top: solid white;
+  border-top-width: 1px;
+  margin: auto;
+}
+
+.list-group-item {
+  background-color: black;
+  border: none;
+  font-size: 18px;
+}
+.temp-info {
+  float: right;
+  font-size: 18px;
+}
+.be-center {
+  position: relative;
+}
