@@ -1,34 +1,26 @@
-body {
-    background-image: url("bk.jpg") ;
-}
-
 .logo{
     height:35%;
-    width:40%;
+    width:55%;
     /*border: 1px solid;*/
     margin-left: auto;
     margin-right:auto;
-    margin-top: 45%;
+    margin-top: 35%;
 }
 
 #start-btn {
     text-align: center;
     margin-left: auto;
     margin-right:auto;
-    margin-top: 20%;
+    margin-top: 45%;
 }
 
 .btn-primary{
     font-size: 50px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Economica', sans-serif;
     background-color: #02C39A;
-    padding: 40px;  
+    padding: 20px;  
     border-radius: 15px;  
 }
-.htn-primary:active{
+.htn-primary:hover{
     background-color: #05668D;
-}
-
-.instructions {
-    font-size: 50px;
 }
