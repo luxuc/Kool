@@ -1,6 +1,10 @@
+body {
+    background-image: url("bk.jpg") ;
+}
+
 .logo{
     height:35%;
-    width:55%;
+    width:40%;
     /*border: 1px solid;*/
     margin-left: auto;
     margin-right:auto;
@@ -16,11 +20,15 @@
 
 .btn-primary{
     font-size: 50px;
-    font-family: 'Economica', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     background-color: #02C39A;
-    padding: 20px;  
+    padding: 40px;  
     border-radius: 15px;  
 }
-.htn-primary:hover{
+.htn-primary:active{
     background-color: #05668D;
+}
+
+.instructions {
+    font-size: 50px;
 }
