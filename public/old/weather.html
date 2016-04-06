@@ -62,9 +62,9 @@ function getDayName(dayNum){
 }
 
 function getWeatherInfo(position) {
-    var forecastURL = "http://api.openweathermap.org/data/2.5/forecast/daily?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&cnt=10&mode=json&APPID=44db6a862fba0b067b1930da0d769e98";
-    var currentURL = "http://api.openweathermap.org/data/2.5/weather?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&APPID=44db6a862fba0b067b1930da0d769e98";
-    var uvIndexURL = "http://api.owm.io/air/1.0/uvi/current?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&appid=44db6a862fba0b067b1930da0d769e98"
+    var forecastURL = "http://api.openweathermap.org/data/2.5/forecast/daily?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&cnt=10&mode=json&APPID=e1de7aab588a5e9836e5fe62aaf3da7b";
+    var currentURL = "http://api.openweathermap.org/data/2.5/weather?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&APPID=e1de7aab588a5e9836e5fe62aaf3da7b";
+    var uvIndexURL = "http://api.owm.io/air/1.0/uvi/current?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&appid=e1de7aab588a5e9836e5fe62aaf3da7b"
     //get current wather info
     $.ajax({
       type: "GET",
@@ -196,7 +196,7 @@ function convertTimestamp(timestamp) {
 $(function(){
   displayTime();
   getLocation();
-  $(".container").delay(600).show( "clip", 400 );
+  $(".container").delay(1000).show( "clip", 400 );
 });
 
 </script>
