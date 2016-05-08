@@ -90,7 +90,7 @@
        
         <div class="ui right floated segment" id="unit">
             °C 
-            <div class="ui slider checkbox" >
+            <div class="ui toggle checkbox" >
                 <input id="tempUnit" type="checkbox" onchange="changeUnit()">
                 <label></label>
             </div>°F
@@ -111,8 +111,7 @@
                     <small class="sub header" style="font-size:40px;">
                       clear, feels like <span id="feelsTemp">2°C</span>
                     </small>
-                </div>
-                <h1 class="ui sub header" id="time"></h1>    
+                </div>    
             </div>       
 
             <div class="ui list" id="min_max" style="font-size:40px">
@@ -124,7 +123,7 @@
             </div>
 
             <div id="illustration">
-                <img class="ui medium image" src="img/illustration/2.png" alt="clothing illustration">
+                <img id="suggestion" class="ui medium image" src="img/illustration/2.png" alt="clothing illustration">
             </div>
             
             <div class="ui column centered grid" id="arrow">

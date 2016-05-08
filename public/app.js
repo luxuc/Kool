@@ -13,11 +13,13 @@ function changeUnit() {
     var location = $("#manual").val();
     if (location == ''){
         if (F) {
+            shortUnit = 'F';
             unit = 'imperial';
             var oP = document.getElementById("weather");
             displayTime();
             getLocation();
         } else {
+            shortUnit = 'C';
             unit = 'metric';
             var oP = document.getElementById("weather");
             displayTime();
@@ -25,11 +27,13 @@ function changeUnit() {
         }
     } else {
         if (F) {
+            shortUnit = 'F';
             unit = 'imperial';
             var oP = document.getElementById("weather");
             displayTime();
             override();
         } else {
+            shortUnit = 'C';
             unit = 'metric';
             var oP = document.getElementById("weather");
             displayTime();
@@ -50,6 +54,12 @@ function getWeatherInfo(position) {
         url: currentURL,
         dataType: "json",
         success:function(responseData, status) {
+            F = $("#tempUnit").is(":checked");
+            if (F) {
+                  shortUnit = 'F';
+            } else {
+                  shortUnit = 'C';
+            }
             //store ifo about city and country
             var cityInfo = responseData.name +", NY";
             $("#City").html(cityInfo);
@@ -57,7 +67,7 @@ function getWeatherInfo(position) {
             //get current temperature, weather condition and icon
             var temp = Math.round(responseData.main.temp)
             var wrappedTemp = "<div id='tempAndIcon'><p><span id='mainTemp''>" + Math.round(temp)
-            + "\u00b0C </span><img class='ui small right floated image' src='img/GIFicons/" + responseData.weather[0].icon + ".gif' /></p></div>";
+            + "\u00b0" + shortUnit + " </span><img class='ui small right floated image' src='img/GIFicons/" + responseData.weather[0].icon + ".gif' /></p></div>";
             
 
             //calculate feels like temperature
@@ -90,7 +100,7 @@ function getWeatherInfo(position) {
             var situation = responseData.weather;
             var weath = "";
             $.each(situation, function(key,val) {
-            weath += "<small class='sub header' style='font-size:40px;'>" + val.description + ", feels like <span id='feelsTemp'>" + feelTemp +"\u00b0C</span></small>";
+            weath += "<small class='sub header' style='font-size:40px;'>" + val.description + ", feels like <span id='feelsTemp'>" + feelTemp + "\u00b0" + shortUnit +"</span></small>";
             });
             var weatherInfo = wrappedTemp + weath;
             $("#Major").html(weatherInfo);
@@ -102,12 +112,12 @@ function getWeatherInfo(position) {
             var d = new Date();
             var dayNum = d.getDay();
             var myday = getDayName(dayNum);
-            $("#min_max").html("<div class='item'>Next Hour <div id='maxTemp' class='ui circular yellow massive label'>" + maxTemp + "\u00b0C</div> - <div id='minTemp' class='ui circular teal massive label'>" + minTemp + "\u00b0C</div></div>");
+            $("#min_max").html("<div class='item'>Next Hour <div id='maxTemp' class='ui circular yellow massive label'>" + maxTemp + "</div> - <div id='minTemp' class='ui circular teal massive label'>" + minTemp + "</div></div>");
           
             if (temp < 10) {
-                $("illustration").html("<img class='ui small image' src='img/illustration/1.png' alt='clothing illustration'>")  
+                $("#illustration").html("<img id='suggestion' class='ui medium image' src='img/illustration/1.png' alt='clothing illustration'>")  
             } else {
-                $("illustration").html("<img class='ui small image' src='img/illustration/2.png' alt='clothing illustration'>") 
+                $("#illustration").html("<img id='suggestion' class='ui medium image' src='img/illustration/2.png' alt='clothing illustration'>") 
             }
             
             /*
@@ -214,14 +224,20 @@ function override() {
         url: currentURL,
         dataType: "json",
         success:function(responseData, status) {
+            F = $("#tempUnit").is(":checked");
+            if (F) {
+                  shortUnit = 'F';
+            } else {
+                  shortUnit = 'C';
+            }
             //store ifo about city and country
             var cityInfo = responseData.name +", NY";
             $("#City").html(cityInfo);
             
             //get current temperature, weather condition and icon
             var temp = Math.round(responseData.main.temp)
-            var wrappedTemp = "<div id='tempAndIcon'><p><span id='mainTemp''>" + temp
-            + "\u00b0C </span><img class='ui small right floated image' src='img/GIFicons/" + responseData.weather[0].icon + ".gif' /></p></div>";
+            var wrappedTemp = "<div id='tempAndIcon'><p><span id='mainTemp''>" + Math.round(temp)
+            + "\u00b0" + shortUnit + " </span><img class='ui small right floated image' src='img/GIFicons/" + responseData.weather[0].icon + ".gif' /></p></div>";
             
 
             //calculate feels like temperature
@@ -268,9 +284,9 @@ function override() {
             var myday = getDayName(dayNum);
             $("#min_max").html("<div class='item'>Next Hour <div id='maxTemp' class='ui circular yellow massive label'>" + maxTemp + "\u00b0C</div> - <div id='minTemp' class='ui circular teal massive label'>" + minTemp + "\u00b0C</div></div>");
             if (temp < 10) {
-                $("illustration").html("<img class='ui medium image' src='img/illustration/1.png' alt='clothing illustration'>")  
+                $("#illustration").html("<img id='suggestion' class='ui medium image' src='img/illustration/1.png' alt='clothing illustration'>")  
             } else {
-                $("illustration").html("<img class='ui medium image' src='img/illustration/2.png' alt='clothing illustration'>") 
+                $("#illustration").html("<img id='suggestion' class='ui medium image' src='img/illustration/2.png' alt='clothing illustration'>") 
             }
             
             $("#weather").css("display","block");
