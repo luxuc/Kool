@@ -270,7 +270,7 @@ function override() {
             var situation = responseData.weather;
             var weath = "";
             $.each(situation, function(key,val) {
-            weath += "<small class='sub header' style='font-size:40px;'>" + val.description + ", feels like <span id='feelsTemp'>" + feelTemp +"\u00b0C</span></small>";
+            weath += "<small class='sub header' style='font-size:40px;'>" + val.description + ", feels like <span id='feelsTemp'>" + feelTemp + "\u00b0" + shortUnit +"</span></small>";
             });
             var weatherInfo = wrappedTemp + weath;
             $("#Major").html(weatherInfo);
@@ -282,13 +282,21 @@ function override() {
             var d = new Date();
             var dayNum = d.getDay();
             var myday = getDayName(dayNum);
-            $("#min_max").html("<div class='item'>Next Hour <div id='maxTemp' class='ui circular yellow massive label'>" + maxTemp + "\u00b0C</div> - <div id='minTemp' class='ui circular teal massive label'>" + minTemp + "\u00b0C</div></div>");
+            $("#min_max").html("<div class='item'>Next Hour <div id='maxTemp' class='ui circular yellow massive label'>" + maxTemp + "</div> - <div id='minTemp' class='ui circular teal massive label'>" + minTemp + "</div></div>");
+          
             if (temp < 10) {
                 $("#illustration").html("<img id='suggestion' class='ui medium image' src='img/illustration/1.png' alt='clothing illustration'>")  
             } else {
                 $("#illustration").html("<img id='suggestion' class='ui medium image' src='img/illustration/2.png' alt='clothing illustration'>") 
             }
             
+            /*
+            //store sunrise and sunset time
+            var sunsetTime = responseData.sys.sunset;
+            var sunriseTime = responseData.sys.sunrise;
+            $("#sun_time").html("Sunrise at " + convertTimestamp(sunriseTime)
+            + " <span class='glyphicon glyphicon-time'></span> Sunset at " + convertTimestamp(sunsetTime));
+            */
             $("#weather").css("display","block");
             $("#spinner").css("display","none");
         }
